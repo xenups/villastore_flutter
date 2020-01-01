@@ -43,6 +43,7 @@ class Unit {
     this.images});
 
   factory Unit.fromJson(Map<String, dynamic> json) {
+
     var list = json['images'] as List;
     print(list.runtimeType);
     List<Image> imagesList = list.map((i) => Image.fromJson(i)).toList();
