@@ -1,10 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:villastore_app/old.dart';
-
 import 'Home.dart';
-import 'Models/UnitModel.dart';
-import 'package:loadmore/loadmore.dart';
 
 void main() async {
   runApp(MyApp());

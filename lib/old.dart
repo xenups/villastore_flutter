@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:loadmore/loadmore.dart';
+import 'package:villastore_app/CustomCard.dart';
 import 'package:villastore_app/Models/PaginatedUnit.dart';
 import 'dart:convert';
 
@@ -18,7 +18,6 @@ class Home_test extends StatefulWidget {
 class _Home_testState extends State<Home_test> {
   var unitLists;
   List<dynamic> units = new List<dynamic>();
-  int itemCount = 0;
   int pageNumber=1;
   bool isLoad = false;
   final numberOfItem = 2;
@@ -32,7 +31,7 @@ class _Home_testState extends State<Home_test> {
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+          _scrollController.position.maxScrollExtent && !isLoad) {
         loadMore();
       }
     });
@@ -49,15 +48,12 @@ class _Home_testState extends State<Home_test> {
     if (unitLists != null) {
       totalItemCount = PaginatedUnit.fromJson(unitLists).count;
     }
-    if (itemCount < totalItemCount) {
+    if (units.length < totalItemCount && isLoad) {
       int page = pageNumber++;
       unitLists = await getUnitLists(page);
       setState(() {
-        itemCount = itemCount + numberOfItem;
         units.addAll(unitLists['results']);
         isLoad = false;
-
-
       });
       return true;
     } else {
@@ -66,13 +62,9 @@ class _Home_testState extends State<Home_test> {
       });
     }
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 200, left: 150),
-        height: 200,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -82,13 +74,11 @@ class _Home_testState extends State<Home_test> {
                       if (snapshot.hasData) {
                         return Container(
                           child: ListView.builder(
-                              itemCount: itemCount,
+                              itemCount: units.length,
                               controller: _scrollController,
                               itemBuilder: (context, index) {
                                 return (Center(
-                                  child: Text(
-                                      Unit.fromJson(units[index]).unit_heading +
-                                          '   count is $itemCount'),
+                                  child: CustomCard(units[index]),
                                 ));
                               }),
                         );
